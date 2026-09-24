@@ -47,6 +47,12 @@ It then opens full-screen like a normal app and works offline (handy in camp).
 > ⚠️ Data is stored in the browser on **that device only** (localStorage). Clearing Safari/Chrome
 > site data will erase it, so use **⚙ → Export backup** now and then (e.g. save to Google Drive).
 
+## Single-file version
+
+`dist/miles-apart.html` is the whole app in **one HTML file** (CSS, JS and icon inlined), handy for
+sending to yourself. Regenerate it after editing with `python3 build-single.py`.
+It skips the offline service worker, since there is no `sw.js` next to it.
+
 ## Files
 
 ```
@@ -56,4 +62,5 @@ app.js                all logic: state, gauges, charts, flow, sheets
 sw.js                 offline support (network-first cache)
 manifest.webmanifest  "install to home screen" metadata
 icon.svg              app icon
+build-single.py       bundles everything into dist/miles-apart.html
 ```

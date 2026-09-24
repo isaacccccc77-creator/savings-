@@ -47,6 +47,21 @@ It then opens full-screen like a normal app and works offline (handy in camp).
 > ⚠️ Data is stored in the browser on **that device only** (localStorage). Clearing Safari/Chrome
 > site data will erase it, so use **⚙ → Export backup** now and then (e.g. save to Google Drive).
 
+## Deploy on Streamlit Community Cloud (free)
+
+`streamlit_app.py` serves the single-file build full-screen, so the app gets a permanent
+`https://<name>.streamlit.app` link.
+
+1. Sign in at [share.streamlit.io](https://share.streamlit.io) with GitHub.
+2. **Create app → Deploy a public app from GitHub**.
+3. Repository `isaacccccc77-creator/savings-`, branch `claude/expenses-tracking-app-9qui1i` (or `main` once merged),
+   main file path `streamlit_app.py`. Optionally pick a custom subdomain under *App URL*, then **Deploy**.
+4. Open the link on your phone → *Add to Home Screen*.
+
+Notes: entries are saved in the browser under the `*.streamlit.app` address, so always use the same link.
+Free apps go to sleep after a period with no visitors; tap "Yes, get this app back up" and your data is still there.
+After changing `index.html` / `styles.css` / `app.js`, run `python3 build-single.py` and push. Streamlit redeploys automatically.
+
 ## Single-file version
 
 `dist/miles-apart.html` is the whole app in **one HTML file** (CSS, JS and icon inlined), handy for
@@ -63,4 +78,7 @@ sw.js                 offline support (network-first cache)
 manifest.webmanifest  "install to home screen" metadata
 icon.svg              app icon
 build-single.py       bundles everything into dist/miles-apart.html
+streamlit_app.py      Streamlit wrapper that serves dist/miles-apart.html
+requirements.txt      Python deps for Streamlit Cloud
+.streamlit/config.toml  Streamlit theme
 ```

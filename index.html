@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Miles Apart</title>
+  <meta name="description" content="Expense tracker + London flight fund. Singapore → London." />
+  <meta name="theme-color" content="#0b0a1a" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated aurora background -->
+  <div class="aurora" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+    <div class="stars"></div>
+  </div>
+
+  <div class="app">
+    <!-- ===== Header ===== -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">✈</div>
+        <div>
+          <h1>Miles Apart</h1>
+          <p class="sub" id="greeting">Singapore → London</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle light / dark theme" title="Theme">◐</button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" title="Settings">⚙</button>
+      </div>
+    </header>
+
+    <!-- ===== Clocks ===== -->
+    <section class="clocks card glass" aria-label="Local times">
+      <div class="clock">
+        <span class="flag">🇸🇬</span>
+        <div><div class="clock-time" id="clockSG">--:--</div><div class="clock-label">You · Singapore</div></div>
+      </div>
+      <div class="clock-link" aria-hidden="true">
+        <span class="beat">💙</span>
+        <div class="clock-diff" id="clockDiff">+7h</div>
+      </div>
+      <div class="clock right">
+        <div><div class="clock-time" id="clockLDN">--:--</div><div class="clock-label" id="partnerLabel">Her · London</div></div>
+        <span class="flag">🇬🇧</span>
+      </div>
+    </section>
+
+    <!-- ===== Month switcher ===== -->
+    <nav class="month-nav" aria-label="Choose month">
+      <button class="icon-btn" id="prevMonth" aria-label="Previous month">‹</button>
+      <div class="month-label" id="monthLabel">—</div>
+      <button class="icon-btn" id="nextMonth" aria-label="Next month">›</button>
+    </nav>
+
+    <main class="grid">
+      <!-- Gauge: money left this month -->
+      <section class="card glass gauge-card" aria-labelledby="leftTitle">
+        <div class="card-head">
+          <h2 id="leftTitle">Left this month</h2>
+          <span class="pill" id="leftStatus">—</span>
+        </div>
+        <div class="gauge" id="leftGauge">
+          <svg viewBox="0 0 220 130" role="img" aria-labelledby="leftGaugeDesc">
+            <desc id="leftGaugeDesc">Semi-circle gauge of money left this month</desc>
+            <defs>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="b" />
+                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
+            <g class="ticks"></g>
+            <path class="track" d="M20 115 A90 90 0 0 1 200 115" pathLength="100" />
+            <path class="fill" d="M20 115 A90 90 0 0 1 200 115" pathLength="100" filter="url(#glow)" />
+            <g class="needle"><circle r="7" class="needle-dot" /><circle r="3" fill="#fff" /></g>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-value" id="leftValue">S$0</div>
+            <div class="gauge-caption" id="leftCaption">of S$0</div>
+          </div>
+        </div>
+        <div class="mini-stats">
+          <div><span class="k">Spent</span><span class="v" id="statSpent">S$0</span></div>
+          <div><span class="k">Saved ✈</span><span class="v" id="statSaved">S$0</span></div>
+          <div><span class="k">Per day left</span><span class="v" id="statPerDay">S$0</span></div>
+        </div>
+      </section>
+
+      <!-- Gauge: London fund -->
+      <section class="card glass gauge-card fund-card" aria-labelledby="fundTitle">
+        <div class="card-head">
+          <h2 id="fundTitle">London Fund</h2>
+          <span class="pill" id="fundStatus">—</span>
+        </div>
+        <div class="gauge" id="fundGauge">
+          <svg viewBox="0 0 220 130" role="img" aria-labelledby="fundGaugeDesc">
+            <desc id="fundGaugeDesc">Semi-circle gauge of flight fund progress</desc>
+            <defs>
+              <linearGradient id="fundGrad" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0" stop-color="#9085e9" />
+                <stop offset=".55" stop-color="#e05aa0" />
+                <stop offset="1" stop-color="#38d6e8" />
+              </linearGradient>
+            </defs>
+            <g class="ticks"></g>
+            <path class="track" d="M20 115 A90 90 0 0 1 200 115" pathLength="100" />
+            <path class="fill" d="M20 115 A90 90 0 0 1 200 115" pathLength="100" stroke="url(#fundGrad)" filter="url(#glow)" />
+            <g class="needle plane"><text class="plane-glyph" text-anchor="middle" dominant-baseline="central">✈</text></g>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-value" id="fundValue">S$0</div>
+            <div class="gauge-caption" id="fundCaption">of S$0 goal</div>
+          </div>
+        </div>
+        <div class="mini-stats">
+          <div><span class="k">Still need</span><span class="v" id="fundNeed">S$0</span></div>
+          <div><span class="k">Save / week</span><span class="v" id="fundWeekly">S$0</span></div>
+          <div><span class="k">Save / month</span><span class="v" id="fundMonthly">S$0</span></div>
+        </div>
+        <div class="fund-actions">
+          <button class="btn primary" id="quickSaveBtn">＋ Add to fund</button>
+          <button class="btn ghost" id="bookedBtn">I booked my flight 🎉</button>
+        </div>
+      </section>
+
+      <!-- Flight path countdown -->
+      <section class="card glass wide flight-card" aria-labelledby="flightTitle">
+        <div class="card-head">
+          <h2 id="flightTitle">Countdown to London</h2>
+          <span class="pill" id="trackPill">—</span>
+        </div>
+        <div class="flight">
+          <div class="city"><div class="code">SIN</div><div class="cname">Singapore</div></div>
+          <div class="route">
+            <svg viewBox="0 0 400 90" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="routeGrad" x1="0" x2="1">
+                  <stop offset="0" stop-color="#38d6e8" /><stop offset="1" stop-color="#e05aa0" />
+                </linearGradient>
+              </defs>
+              <path id="routePath" class="route-bg" d="M10 75 Q200 -20 390 75" />
+              <path class="route-done" d="M10 75 Q200 -20 390 75" pathLength="100" />
+              <path class="route-dash" d="M10 75 Q200 -20 390 75" />
+            </svg>
+            <div class="route-plane" id="routePlane">✈</div>
+          </div>
+          <div class="city"><div class="code">LHR</div><div class="cname" id="partnerCityName">London</div></div>
+        </div>
+        <div class="countdown">
+          <div class="cd-big"><span id="daysLeft">0</span><small>days to go</small></div>
+          <div class="cd-meta">
+            <div>Target trip: <strong id="targetDateLabel">—</strong></div>
+            <div class="muted" id="trackText">—</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Money flow with animated arrows -->
+      <section class="card glass wide" aria-labelledby="flowTitle">
+        <div class="card-head">
+          <h2 id="flowTitle">Where the money goes</h2>
+          <span class="trend" id="trend"><span class="trend-arrow" id="trendArrow">↑</span><span id="trendText">—</span></span>
+        </div>
+        <div class="flow" id="flow">
+          <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="flowDesc">
+            <desc id="flowDesc">Flow diagram showing income split into spending, savings and money left</desc>
+            <g id="flowPaths"></g>
+            <g id="flowNodes"></g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Categories -->
+      <section class="card glass" aria-labelledby="catTitle">
+        <div class="card-head"><h2 id="catTitle">By category</h2><span class="muted small" id="catTotal"></span></div>
+        <ul class="cats" id="cats"></ul>
+      </section>
+
+      <!-- Daily chart -->
+      <section class="card glass" aria-labelledby="dailyTitle">
+        <div class="card-head"><h2 id="dailyTitle">Daily spending</h2><span class="muted small" id="dailyAvg"></span></div>
+        <div class="daily" id="daily">
+          <svg viewBox="0 0 360 170" preserveAspectRatio="none" id="dailySvg" role="img" aria-label="Bar chart of spending per day this month"></svg>
+          <div class="tooltip" id="tooltip" role="status"></div>
+        </div>
+        <div class="insights" id="insights"></div>
+      </section>
+
+      <!-- Transactions -->
+      <section class="card glass wide" aria-labelledby="txTitle">
+        <div class="card-head">
+          <h2 id="txTitle">Transactions</h2>
+          <div class="seg" role="tablist" id="txFilter">
+            <button class="active" data-f="all" role="tab">All</button>
+            <button data-f="expense" role="tab">Spent</button>
+            <button data-f="save" role="tab">Fund</button>
+            <button data-f="income" role="tab">Income</button>
+          </div>
+        </div>
+        <div id="txList" class="tx-list"></div>
+      </section>
+
+      <!-- Trips -->
+      <section class="card glass wide" aria-labelledby="tripsTitle" id="tripsCard" hidden>
+        <div class="card-head"><h2 id="tripsTitle">Trips to see her 💙</h2></div>
+        <ul class="trips" id="tripsList"></ul>
+      </section>
+    </main>
+
+    <footer class="foot muted small">Data is stored only on this device. Back it up in ⚙ Settings.</footer>
+  </div>
+
+  <!-- Floating add button -->
+  <button class="fab" id="fab" aria-label="Add transaction"><span>＋</span></button>
+
+  <!-- ===== Add transaction sheet ===== -->
+  <div class="sheet-backdrop" id="addSheet" hidden>
+    <form class="sheet glass" id="addForm" autocomplete="off">
+      <div class="sheet-grab" aria-hidden="true"></div>
+      <div class="seg big" id="typeSeg" role="tablist">
+        <button type="button" class="active" data-type="expense">💸 Spent</button>
+        <button type="button" data-type="save">✈ Save</button>
+        <button type="button" data-type="income">💰 Income</button>
+      </div>
+      <label class="amount-wrap">
+        <span class="cur">S$</span>
+        <input id="amountInput" type="number" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" required />
+      </label>
+      <div class="chips" id="catChips" role="radiogroup" aria-label="Category"></div>
+      <div class="row">
+        <input id="noteInput" type="text" maxlength="60" placeholder="Note (e.g. chicken rice, MRT)" />
+        <input id="dateInput" type="date" required />
+      </div>
+      <div class="quick" id="quickRow"></div>
+      <div class="sheet-actions">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ===== Settings sheet ===== -->
+  <div class="sheet-backdrop" id="settingsSheet" hidden>
+    <form class="sheet glass" id="settingsForm">
+      <div class="sheet-grab" aria-hidden="true"></div>
+      <h2>Settings</h2>
+      <div class="field-grid">
+        <label>Your name<input name="name" type="text" maxlength="30" placeholder="e.g. Isaac" /></label>
+        <label>Her city<input name="partnerCity" type="text" maxlength="30" /></label>
+        <label>Monthly income (NS allowance etc.)<input name="income" type="number" min="0" step="1" inputmode="decimal" /></label>
+        <label>Monthly spending budget<input name="budget" type="number" min="0" step="1" inputmode="decimal" placeholder="optional" /></label>
+        <label>Return flight cost (S$)<input name="flightCost" type="number" min="1" step="1" inputmode="decimal" /></label>
+        <label>Target trip date<input name="targetDate" type="date" /></label>
+      </div>
+      <p class="muted small">Tip: SIN ⇄ LHR economy return usually runs ~S$1,100–1,800. Cheaper if you book 3–5 months ahead and avoid Dec / summer peaks.</p>
+      <div class="data-actions">
+        <button type="button" class="btn ghost" id="exportBtn">⬇ Export backup</button>
+        <label class="btn ghost file-btn">⬆ Import backup<input type="file" id="importInput" accept="application/json" hidden /></label>
+        <button type="button" class="btn ghost" id="sampleBtn">✨ Load sample data</button>
+        <button type="button" class="btn danger" id="resetBtn">Reset everything</button>
+      </div>
+      <div class="sheet-actions">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>
